@@ -2,14 +2,15 @@ import kivy
 kivy.require('1.9.1')
 
 from kivy.app import App
-from kivy.graphics import (
-        Color,
-        Ellipse,
-        Rectangle
-)
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.label import Label
+
+from graphics import (
+        GamePanel,
+        GraphicalNote,
+        ScorePanel,
+        WINDOW_HEIGHT,
+        WINDOW_WIDTH
+)
 
 class Level:
 
@@ -29,13 +30,6 @@ class Score:
         self.notes = []                # All notations on the staff.
 
 
-class GraphicalNote(BoxLayout):
-    def __init__(self, note, pixel_offset, width):
-        super(GraphicalNote, self).__init__()
-        self.pos = (pixel_offset, 40)
-        with self.canvas:
-            Color(0.5, 0, 0)
-            self.ellipse = Ellipse(size=(width, width), pos=self.pos)
 
 class HighScore(App):
     """
@@ -46,14 +40,11 @@ class HighScore(App):
         self.current_level = level
 
     def build(self):
-        layout = FloatLayout()
-        notes = self.current_level.score.notes
-        self.width = 800
-        curr_x = 0
-        width = self.width / len(notes)
-        for note in notes:
-            layout.add_widget(GraphicalNote(note, curr_x, width))
-            curr_x = curr_x + width
+        layout = BoxLayout(orientation='vertical')
+        layout.width = WINDOW_WIDTH
+        layout.height = WINDOW_HEIGHT
+        layout.add_widget(ScorePanel())
+        layout.add_widget(GamePanel(self.current_level.score.notes))
         return layout
 
 
